@@ -1,0 +1,68 @@
+
+## Custom Chart  
+## Uso de Redis 
+
+redis:
+    image:
+      registry: docker.io
+      repository: viborx/tfg_redis
+      tag: 00.00.007
+    
+    auth:
+      password: "UNED"
+      
+    master:  
+      ## Por defecto se deshabilitan los comandos FLUSHDB y FLUSHALL. 
+      ## Vamos a necesitarlos para el módulo.
+      disableCommands: []       
+    replica:
+      ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
+      ##
+      replicaCount: 1 
+      ## @param replica.disableCommands Array with Redis&trade; commands to disable on replicas nodes
+      ## Commands will be completely disabled by renaming each to an empty string.
+      ## ref: https://redis.io/topics/security#disabling-of-specific-commands
+      ## 
+      disableCommands: []
+      autoscaling:
+            ## @param replica.autoscaling.enabled Enable replica autoscaling settings
+            ##
+            enabled: false
+            ## @param replica.autoscaling.minReplicas Minimum replicas for the pod autoscaling
+            ##
+            minReplicas: 1
+            ## @param replica.autoscaling.maxReplicas Maximum replicas for the pod autoscaling
+            ##
+            maxReplicas: 1
+            ## @param replica.autoscaling.targetCPU Percentage of CPU to consider when autoscaling
+            ##
+            targetCPU: ""
+            ## @param replica.autoscaling.targetMemory Percentage of Memory to consider when autoscaling
+            ##
+            targetMemory: ""
+jupyterhub:
+  singleuser:
+    image:
+      # You should replace the "latest" tag with a fixed version from:
+      # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+      # Inspect the Dockerfile at:
+      # https://github.com/jupyter/docker-stacks/tree/HEAD/datascience-notebook/Dockerfile
+      name: viborx/tfg_jupyter_redis
+      tag: 00.00.001
+  scheduling:
+      userScheduler:
+        enabled: false
+  cull:
+    enabled: false     
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - UNED  
+        allowed_users:
+      # ...
+      DummyAuthenticator:
+        password: UNED
+      JupyterHub:
+        authenticator_class: dummy
+

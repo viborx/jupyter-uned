@@ -1,0 +1,33 @@
+CHART NAME: {{ .Chart.Name }}
+CHART VERSION: {{ .Chart.Version }}
+APP VERSION: {{ .Chart.AppVersion }}
+
+** Se está desplegando la bbdd Redis y Jupyter Notes
+** El proceso puede durar minutos. Por favor, sé paciente
+
+
+Se han creado dos pods (master y replica) con el cliente Redis y otros dos (hub y proxy).
+Puedes verlos ejecutando:
+   kubectl get pods
+   
+Para abrir el cliente redis dentro del master:
+      kubectl exec {{ .Release.Name }}-master-0 -i -t -- redis-cli --no-auth-warning -a UNED
+
+Si queremos abrir un terminal en ese pod:
+      kubectl exec {{ .Release.Name }}-master-0 -i -t -- bash
+
+Y si queremos abrir el Jupyter Notes:
+	1. Abrimos un nuevo terminal y ejecutamos:
+		minikube tunnel
+	2. Buscamos la entrada de tipo (TYPE) LoadBalancer ejecutando:
+		kubectl get services
+	Si el campo EXTERNAL-IP tiene valor (127.0.0.1) abrimos esa ip un navegador 
+	
+	En caso de que el puerto 80 ya esté ocupado por otro proceso, podemos redirigir un puerto alternativo
+	(por ejemplo el 8443) al pod que hacer de proxy del Jupyter NoteBooks.
+	Para ello ejecutamos:
+		kubctl get pods
+	Y cogemos el nombre del pod proxy (nos referiremos a el como podProxy). Ejecutaremos:
+		kubectl -n default port-forward  [podProxy] [puertoAlternativo]:8000
+	Por ejemplo:
+		kubectl -n default port-forward  proxy-67cc468694-grvvz 8443:8000

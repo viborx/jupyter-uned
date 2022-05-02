@@ -1,0 +1,13 @@
+# parent/Chart.yaml
+apiVersion: v2
+name: uned-redis
+version: 01.07.00
+
+
+dependencies:
+  - name: redis
+    repository: https://charts.bitnami.com/bitnami
+    version: 16.8.5
+  - name: jupyterhub 
+    repository: https://jupyterhub.github.io/helm-chart/
+    version: 1.2.0
